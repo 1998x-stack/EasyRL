@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>3.1.2 免模型</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>01_3.1.2_免模型</h1>
+<pre><code>Lecture: 03_表格型方法/3.1_马尔可夫决策过程
+Content: 01_3.1.2_免模型
+</code></pre>
+<h3>3.1.2 免模型</h3>
+<h4>1. 免模型强化学习概述</h4>
+<p>免模型强化学习（Model-free Reinforcement Learning）是一种无需预先构建环境模型的强化学习方法。与有模型强化学习不同，免模型强化学习不需要了解状态转移概率和奖励函数等环境信息，而是通过与环境的直接交互，逐步学习最优策略。这种方法更符合现实中的许多应用场景，因为实际环境往往复杂且难以建模。</p>
+<h4>2. 免模型强化学习的核心思想</h4>
+<p>在免模型强化学习中，智能体通过试错（Trial and Error）机制学习。智能体在每个时间步选择一个动作，并根据环境反馈的奖励和新状态调整其策略。常用的方法包括：</p>
+<ul>
+<li><strong>价值函数</strong>：评估每个状态的好坏程度，常用状态价值函数 $ V(s) $ 和动作价值函数 $ Q(s, a) $ 来表示。</li>
+<li><strong>策略</strong>：决定智能体在每个状态下应采取的动作，策略可以是确定性的也可以是随机的。</li>
+</ul>
+<p>通过不断地探索和利用（Exploration and Exploitation），智能体可以找到使长期累积奖励最大化的最优策略。</p>
+<h4>3. 免模型强化学习的主要方法</h4>
+<ol>
+<li>
+<p><strong>蒙特卡洛方法（Monte Carlo Methods）</strong>：</p>
+<ul>
+<li>蒙特卡洛方法基于采样，通过多次与环境交互，收集大量轨迹数据，计算每条轨迹的累积奖励，最终通过平均值估计每个状态或状态-动作对的价值。</li>
+<li>优点：不需要环境模型，适用于有终止状态的情景。</li>
+<li>缺点：收敛速度较慢，需要大量样本。</li>
+</ul>
+</li>
+<li>
+<p><strong>时序差分方法（Temporal Difference Learning, TD）</strong>：</p>
+<ul>
+<li>时序差分方法结合了动态规划和蒙特卡洛方法的优点，通过每一步更新价值函数。常见的时序差分方法包括 TD(0)、Sarsa 和 Q-learning。</li>
+<li>优点：无需完整轨迹，适用于在线学习，收敛速度快。</li>
+<li>缺点：需要设定学习率，可能出现偏差。</li>
+</ul>
+</li>
+</ol>
+<h4>4. 蒙特卡洛方法</h4>
+<p>蒙特卡洛方法通过与环境的反复交互，收集大量轨迹数据，并计算每条轨迹的累积奖励，从而估计策略的价值。其基本步骤如下：</p>
+<ol>
+<li><strong>生成轨迹</strong>：在给定策略下，与环境交互生成多条轨迹。</li>
+<li><strong>计算回报</strong>：对每条轨迹计算从每个状态开始的累积回报 $ G_t $。</li>
+<li><strong>更新价值函数</strong>：根据所有轨迹的累积回报，更新每个状态或状态-动作对的价值函数 $ V(s) $ 或 $ Q(s, a) $。</li>
+</ol>
+<p>蒙特卡洛方法的主要优点是直观且易于理解，但其缺点在于需要大量样本，且只适用于有终止状态的情况。</p>
+<h4>5. 时序差分方法</h4>
+<p>时序差分方法通过每一步更新价值函数，将动态规划的自举（Bootstrapping）思想和蒙特卡洛方法的采样（Sampling）思想结合起来。常见的时序差分方法有：</p>
+<ol>
+<li>
+<p><strong>TD(0)</strong>：最简单的时序差分方法，通过一步前瞻更新价值函数：
+$$ V(s_t) \leftarrow V(s_t) + \alpha \left( r_{t+1} + \gamma V(s_{t+1}) - V(s_t) \right) $$</p>
+</li>
+<li>
+<p><strong>Sarsa</strong>：一种同策略时序差分方法，更新状态-动作价值函数：
+$$ Q(s_t, a_t) \leftarrow Q(s_t, a_t) + \alpha \left( r_{t+1} + \gamma Q(s_{t+1}, a_{t+1}) - Q(s_t, a_t) \right) $$</p>
+</li>
+<li>
+<p><strong>Q-learning</strong>：一种异策略时序差分方法，通过最大化未来奖励来更新状态-动作价值函数：
+$$ Q(s_t, a_t) \leftarrow Q(s_t, a_t) + \alpha \left( r_{t+1} + \gamma \max_a Q(s_{t+1}, a) - Q(s_t, a_t) \right) $$</p>
+</li>
+</ol>
+<p>时序差分方法的主要优点是收敛速度快，适用于在线学习，但需要设定学习率，可能会出现偏差。</p>
+<h4>6. 有模型与免模型强化学习的比较</h4>
+<p>有模型和免模型强化学习的主要区别在于是否需要预先构建环境模型。有模型方法依赖于环境的状态转移概率和奖励函数，通过模拟环境进行规划和决策；而免模型方法直接与环境交互，通过试错机制学习最优策略。</p>
+<p><strong>有模型强化学习的优缺点</strong>：</p>
+<ul>
+<li><strong>优点</strong>：数据效率高，可在虚拟环境中进行大量模拟和实验，适用于复杂高风险的环境。</li>
+<li><strong>缺点</strong>：需要准确的环境模型，计算复杂度高，模型与真实环境的差异可能影响策略的泛化能力。</li>
+</ul>
+<p><strong>免模型强化学习的优缺点</strong>：</p>
+<ul>
+<li><strong>优点</strong>：无需预先构建环境模型，适用于未知环境和在线学习，简单直观。</li>
+<li><strong>缺点</strong>：需要大量样本，收敛速度较慢，可能出现偏差。</li>
+</ul>
+<h3>总结</h3>
+<p>免模型强化学习通过直接与环境交互，通过试错机制逐步学习最优策略，适用于许多实际应用场景。其主要方法包括蒙特卡洛方法和时序差分方法，各有优缺点。在实际应用中，选择合适的强化学习方法需要根据具体问题和环境特点进行权衡。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 01_3.1.2_免模型
+
+"""
+Lecture: 03_表格型方法/3.1_马尔可夫决策过程
+Content: 01_3.1.2_免模型
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

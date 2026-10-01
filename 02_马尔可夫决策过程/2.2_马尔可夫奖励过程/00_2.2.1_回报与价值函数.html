@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.2.1 回报与价值函数</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>00_2.2.1_回报与价值函数</h1>
+<pre><code>Lecture: 02_马尔可夫决策过程/2.2_马尔可夫奖励过程
+Content: 00_2.2.1_回报与价值函数
+</code></pre>
+<h3>详细分析：回报与价值函数 (2.2.1)</h3>
+<h4>概述</h4>
+<p>回报与价值函数是马尔可夫奖励过程（Markov Reward Process, MRP）的核心概念。在MRP中，每个状态不仅与下一状态的转移概率相关，还与一个奖励函数相关，该奖励函数定义了到达某一状态时的即时奖励。</p>
+<h4>回报</h4>
+<p>回报（Return）是指从当前时刻开始直到未来某个终止时刻的累积奖励，考虑了时间上的折扣因子。具体定义为：
+$$ G_t = r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \cdots + \gamma^{T-t-1} r_T $$
+其中，$ r_{t+k} $ 是第 $ t+k $ 时刻的即时奖励，$ \gamma $ 是折扣因子（ $ 0 \leq \gamma \leq 1 $ ）， $ T $ 是最终时刻。</p>
+<p>折扣因子的作用是减少未来奖励的价值，使得即时奖励比未来的奖励更有价值。这种设计考虑了以下几点：</p>
+<ol>
+<li><strong>避免无穷累积奖励</strong>：对于某些带环的马尔可夫过程，可能不会终止，通过折扣因子可以避免累积无穷奖励。</li>
+<li><strong>模型不确定性</strong>：未来的奖励预测不一定准确，折扣因子反映了这种不确定性。</li>
+<li><strong>即时奖励偏好</strong>：通常即时获得的奖励比未来的奖励更有价值，类似于金融中的“时间价值”概念。</li>
+<li><strong>调节智能体行为</strong>：通过调整折扣因子，可以控制智能体对未来奖励的关注程度，适应不同的任务需求。</li>
+</ol>
+<h4>价值函数</h4>
+<p>价值函数（Value Function）用于评估某一状态的好坏，定义为从该状态出发所能获得的预期回报。具体定义为：
+$$ V(s) = E[G_t | S_t = s] = E[r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \cdots | S_t = s] $$</p>
+<p>价值函数通过期望值计算，从状态 $ s $ 出发，考虑所有可能的未来状态及其对应的回报。</p>
+<h4>状态价值函数与动作价值函数</h4>
+<p>在马尔可夫决策过程中（MDP）中，价值函数进一步细化为状态价值函数和动作价值函数：</p>
+<ul>
+<li><strong>状态价值函数 $ V(s) $</strong>：表示在状态 $ s $ 时，遵循策略 $ \pi $ 所能获得的期望回报。</li>
+<li><strong>动作价值函数 $ Q(s, a) $</strong>：表示在状态 $ s $ 采取动作 $ a $ 时，遵循策略 $ \pi $ 所能获得的期望回报。</li>
+</ul>
+<p>动作价值函数通过状态价值函数进行定义和计算：
+$$ Q(s, a) = E[r_{t+1} + \gamma V(S_{t+1}) | S_t = s, A_t = a] $$</p>
+<h4>贝尔曼方程</h4>
+<p>贝尔曼方程（Bellman Equation）提供了一种递归关系，将当前状态的价值函数与下一状态的价值函数联系起来，定义为：
+$$ V(s) = R(s) + \gamma \sum_{s'} P(s'|s) V(s') $$
+其中，$ R(s) $ 是状态 $ s $ 的即时奖励，$ P(s'|s) $ 是从状态 $ s $ 转移到状态 $ s' $ 的概率。</p>
+<p>贝尔曼方程揭示了当前状态的价值是即时奖励与未来折扣奖励之和，通过不断迭代，可以求解出所有状态的价值函数。</p>
+<h4>应用</h4>
+<p>回报与价值函数在强化学习和优化控制等领域具有广泛的应用：</p>
+<ol>
+<li><strong>策略评估与改进</strong>：通过计算不同策略下的价值函数，可以评估策略的优劣并进行改进。</li>
+<li><strong>路径规划与导航</strong>：在机器人导航中，通过价值函数评估不同路径的好坏，从而选择最优路径。</li>
+<li><strong>资源分配与调度</strong>：在资源管理中，通过价值函数评估不同分配方案的收益，优化资源利用效率。</li>
+</ol>
+<h4>总结</h4>
+<p>回报与价值函数是马尔可夫奖励过程的核心概念，通过定义和计算累积奖励及其期望值，可以评估和优化系统的长期表现。理解这些概念对于深入研究和应用强化学习、优化控制等方法具有重要意义。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 00_2.2.1_回报与价值函数
+
+"""
+Lecture: 02_马尔可夫决策过程/2.2_马尔可夫奖励过程
+Content: 00_2.2.1_回报与价值函数
+"""
+
+from typing import List, Dict, Tuple
+import numpy as np
+
+class MarkovRewardProcess:
+    """
+    Markov Reward Process (MRP) class for handling states, rewards, and value functions.
+    
+    Attributes:
+        states (List[str]): List of state names.
+        transition_matrix (np.ndarray): State transition probability matrix.
+        rewards (Dict[str, float]): Rewards for each state.
+        gamma (float): Discount factor.
+    """
+    
+    def __init__(self, states: List[str], transition_matrix: np.ndarray, rewards: Dict[str, float], gamma: float):
+        """
+        初始化 MRP 实例。
+        
+        Args:
+            states (List[str]): 状态名称列表。
+            transition_matrix (np.ndarray): 状态转移概率矩阵。
+            rewards (Dict[str, float]): 每个状态的奖励。
+            gamma (float): 折扣因子。
+        """
+        assert len(states) == transition_matrix.shape[0] == transition_matrix.shape[1], "状态和转移矩阵大小不匹配"
+        assert 0 <= gamma <= 1, "折扣因子必须在 0 到 1 之间"
+
+        self.states = states
+        self.state_index = {state: i for i, state in enumerate(states)}
+        self.transition_matrix = transition_matrix
+        self.rewards = rewards
+        self.gamma = gamma
+    
+    def get_return(self, state_sequence: List[str]) -> float:
+        """
+        计算给定状态序列的回报（累积奖励）。
+        
+        Args:
+            state_sequence (List[str]): 状态序列。
+        
+        Returns:
+            float: 累积回报值。
+        """
+        total_return = 0.0
+        for t, state in enumerate(state_sequence):
+            if state in self.rewards:
+                total_return += (self.gamma ** t) * self.rewards[state]
+        return total_return
+
+    def compute_value_function(self, epsilon: float = 1e-6) -> Dict[str, float]:
+        """
+        使用贝尔曼方程计算状态的价值函数。
+        
+        Args:
+            epsilon (float): 收敛条件。
+        
+        Returns:
+            Dict[str, float]: 各状态的价值函数。
+        """
+        num_states = len(self.states)
+        V = np.zeros(num_states)
+        delta = float('inf')
+
+        while delta > epsilon:
+            delta = 0
+            for i, state in enumerate(self.states):
+                v = V[i]
+                V[i] = self.rewards[state] + self.gamma * np.sum(self.transition_matrix[i, :] * V)
+                delta = max(delta, abs(v - V[i]))
+
+        return {state: V[i] for i, state in enumerate(self.states)}
+    
+    def print_value_function(self, value_function: Dict[str, float]) -> None:
+        """
+        打印状态价值函数。
+        
+        Args:
+            value_function (Dict[str, float]): 各状态的价值函数。
+        """
+        for state, value in value_function.items():
+            print(f"State: {state}, Value: {value:.4f}")
+
+# 测试示例
+if __name__ == "__main__":
+    states = ["A", "B", "C"]
+    transition_matrix = np.array([[0.5, 0.3, 0.2],
+                                  [0.2, 0.6, 0.2],
+                                  [0.1, 0.1, 0.8]])
+    rewards = {"A": 1.0, "B": 0.5, "C": 0.0}
+    gamma = 0.9
+
+    mrp = MarkovRewardProcess(states, transition_matrix, rewards, gamma)
+    
+    # 计算状态价值函数
+    value_function = mrp.compute_value_function()
+    
+    # 打印状态价值函数
+    mrp.print_value_function(value_function)
+    
+    # 计算状态序列的回报
+    state_sequence = ["A", "B", "C", "A", "C"]
+    total_return = mrp.get_return(state_sequence)
+    print(f"Total Return for the sequence {state_sequence}: {total_return:.4f}")</code></pre>
+  </div>
+</body>
+</html>
+  

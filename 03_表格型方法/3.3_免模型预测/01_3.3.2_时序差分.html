@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>3.3.2 时序差分</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>01_3.3.2_时序差分</h1>
+<pre><code>Lecture: 03_表格型方法/3.3_免模型预测
+Content: 01_3.3.2_时序差分
+</code></pre>
+<h3>3.3.2 时序差分</h3>
+<h4>1. 时序差分方法概述</h4>
+<p>时序差分方法（Temporal Difference, TD）是介于蒙特卡洛方法和动态规划之间的一种强化学习方法。它结合了动态规划的自举（Bootstrapping）思想和蒙特卡洛方法的采样（Sampling）思想，无需环境模型，通过每一步的更新来估计价值函数。</p>
+<h4>2. 时序差分的基本原理</h4>
+<p>时序差分方法的基本思想是利用当前状态和动作的即时奖励，以及下一个状态的估计价值来更新当前状态的价值。其基本公式为：
+$$ V(s_t) \leftarrow V(s_t) + \alpha \left( r_{t+1} + \gamma V(s_{t+1}) - V(s_t) \right) $$
+其中：</p>
+<ul>
+<li>$V(s_t)$ 是状态 $s_t$ 的当前价值估计。</li>
+<li>$\alpha$ 是学习率。</li>
+<li>$r_{t+1}$ 是在状态 $s_t$ 执行动作 $a_t$ 后得到的即时奖励。</li>
+<li>$\gamma$ 是折扣因子。</li>
+<li>$V(s_{t+1})$ 是下一个状态 $s_{t+1}$ 的价值估计。</li>
+</ul>
+<h4>3. 时序差分目标和误差</h4>
+<ul>
+<li>
+<p><strong>时序差分目标（TD Target）</strong>：时序差分目标是由即时奖励和下一个状态的折扣价值组成的估计回报：
+$$ \text{TD Target} = r_{t+1} + \gamma V(s_{t+1}) $$</p>
+</li>
+<li>
+<p><strong>时序差分误差（TD Error）</strong>：时序差分误差是当前估计价值与时序差分目标之间的差距：
+$$ \delta = r_{t+1} + \gamma V(s_{t+1}) - V(s_t) $$</p>
+</li>
+</ul>
+<p>时序差分方法通过最小化时序差分误差来更新价值函数，使得价值估计逐步逼近真实的回报。</p>
+<h4>4. 时序差分方法的实现步骤</h4>
+<ol>
+<li><strong>初始化</strong>：初始化价值函数 $V(s)$ 为任意值（通常为零或随机值）。</li>
+<li><strong>选择动作</strong>：在状态 $s_t$ 下，根据当前策略选择动作 $a_t$。</li>
+<li><strong>执行动作</strong>：执行动作 $a_t$，观察即时奖励 $r_{t+1}$ 和下一个状态 $s_{t+1}$。</li>
+<li><strong>更新价值</strong>：使用时序差分更新公式更新当前状态的价值：
+$$ V(s_t) \leftarrow V(s_t) + \alpha \left( r_{t+1} + \gamma V(s_{t+1}) - V(s_t) \right) $$</li>
+<li><strong>状态转移</strong>：将状态更新为 $s_{t+1}$，重复步骤 2-4 直到终止状态。</li>
+</ol>
+<h4>5. 时序差分方法的优势</h4>
+<ol>
+<li><strong>在线学习</strong>：时序差分方法可以在每一步更新价值，无需等待完整轨迹，适用于在线学习。</li>
+<li><strong>从不完整序列中学习</strong>：与蒙特卡洛方法不同，时序差分方法可以从不完整的序列中学习。</li>
+<li><strong>适用于连续环境</strong>：时序差分方法可以在没有终止状态的连续环境中进行学习。</li>
+</ol>
+<h4>6. 时序差分方法的变体</h4>
+<ol>
+<li><strong>TD(0)</strong>：最基本的时序差分方法，每一步进行更新。</li>
+<li><strong>n 步时序差分（n-step TD）</strong>：通过多步更新（如 TD(1), TD(2), ...）结合蒙特卡洛方法和时序差分方法的优点。</li>
+<li><strong>Sarsa</strong>：同策略时序差分控制算法，通过下一个状态和动作的价值更新当前状态和动作的价值。</li>
+<li><strong>Q-learning</strong>：异策略时序差分控制算法，通过最大化未来奖励来更新当前状态和动作的价值。</li>
+</ol>
+<h4>7. 时序差分与蒙特卡洛方法的比较</h4>
+<ol>
+<li>
+<p><strong>更新频率</strong>：</p>
+<ul>
+<li>时序差分方法可以每一步更新，适用于在线学习。</li>
+<li>蒙特卡洛方法只能在完整轨迹结束后进行更新。</li>
+</ul>
+</li>
+<li>
+<p><strong>样本需求</strong>：</p>
+<ul>
+<li>时序差分方法需要较少的样本，更新速度快。</li>
+<li>蒙特卡洛方法需要大量样本，收敛速度慢。</li>
+</ul>
+</li>
+<li>
+<p><strong>偏差与方差</strong>：</p>
+<ul>
+<li>时序差分方法有偏估计，但方差较小，更新稳定。</li>
+<li>蒙特卡洛方法无偏估计，但方差较大，更新不稳定。</li>
+</ul>
+</li>
+</ol>
+<h3>总结</h3>
+<p>时序差分方法是一种有效的强化学习方法，通过结合动态规划和蒙特卡洛方法的优点，实现了在线学习和从不完整序列中学习的能力。其核心在于利用即时奖励和下一个状态的折扣价值来更新当前状态的价值。时序差分方法在实际应用中具有广泛的应用前景，如游戏AI、金融投资、机器人导航等。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 01_3.3.2_时序差分
+
+"""
+Lecture: 03_表格型方法/3.3_免模型预测
+Content: 01_3.3.2_时序差分
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

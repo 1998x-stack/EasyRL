@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.3.7 预测与控制</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>06_2.3.7_预测与控制</h1>
+<pre><code>Lecture: 02_马尔可夫决策过程/2.3_马尔可夫决策过程
+Content: 06_2.3.7_预测与控制
+</code></pre>
+<h3>2.3.7 预测与控制</h3>
+<h4>1. 概述</h4>
+<p>在马尔可夫决策过程中，预测（Prediction）和控制（Control）是两个核心问题。预测的目标是评估一个给定的策略，计算在该策略下各个状态的价值。控制的目标是找到最优策略，使得在这种策略下各个状态的价值达到最大。</p>
+<h4>2. 预测</h4>
+<p>预测问题的输入包括马尔可夫决策过程 $(S, A, P, R, \gamma)$ 和策略 $\pi$，输出是策略 $\pi$ 下的价值函数 $V_{\pi}(s)$。预测的过程是计算每个状态在给定策略下的预期累积奖励，即：
+$$ V_{\pi}(s) = \mathbb{E}_{\pi} [G_t | S_t = s] $$
+其中，$G_t$ 表示从时间步 $t$ 开始的累积奖励。</p>
+<p>贝尔曼期望方程描述了当前状态价值和未来状态价值之间的关系：
+$$ V_{\pi}(s) = \sum_{a \in A} \pi(a|s) \sum_{s' \in S} P(s'|s,a) [R(s,a) + \gamma V_{\pi}(s')] $$</p>
+<h4>3. 控制</h4>
+<p>控制问题的输入是马尔可夫决策过程 $(S, A, P, R, \gamma)$，输出是最优价值函数 $V^<em>$ 和最优策略 $\pi^</em>$。控制的目标是找到一个策略 $\pi$，使得在该策略下，所有状态的价值最大化，即：
+$$ V^*(s) = \max_{\pi} V_{\pi}(s) $$</p>
+<p>控制问题可以通过动态规划方法解决，如策略迭代和价值迭代。策略迭代包括策略评估和策略改进两个步骤，通过反复迭代直到策略收敛，得到最优策略和最优价值函数。价值迭代则是直接通过贝尔曼最优方程迭代求解最优价值函数，然后提取最优策略。</p>
+<h4>4. 预测与控制的关系</h4>
+<p>预测和控制问题在强化学习中是递进的关系。首先解决预测问题，即给定一个策略，评估其价值函数；然后解决控制问题，找到使得价值函数最大的策略。通过反复进行策略评估和策略改进，最终可以找到最优策略和最优价值函数。</p>
+<h4>5. 预测与控制的应用</h4>
+<ul>
+<li><strong>路径规划</strong>：在路径规划问题中，机器人需要根据当前策略评估路径的价值，进而优化路径选择。</li>
+<li><strong>游戏AI</strong>：在游戏中，AI需要评估每个状态-动作对的价值，以选择最优动作。</li>
+<li><strong>资源分配</strong>：在资源分配问题中，通过评估当前策略的价值，优化资源分配策略。</li>
+</ul>
+<h4>6. 预测与控制的示例</h4>
+<p>以一个简单的网格世界为例，智能体可以在网格中移动，每个动作会带来即时奖励。预测问题是给定一个随机策略，计算各个状态的价值；控制问题是在网格中寻找最优策略，使得智能体能够获得最大的累积奖励。</p>
+<p><strong>预测问题示例</strong>：
+给定随机策略（各个动作的概率均为0.25），评估策略的价值函数。</p>
+<p><strong>控制问题示例</strong>：
+通过策略迭代或价值迭代方法，找到使得累积奖励最大的策略。</p>
+<h4>7. 预测与控制的优化方法</h4>
+<ul>
+<li><strong>动态规划</strong>：适用于已知环境模型，通过递归求解贝尔曼方程，解决预测与控制问题。</li>
+<li><strong>时序差分法</strong>：适用于未知环境，通过估计价值函数，进行策略评估和改进。</li>
+<li><strong>蒙特卡洛方法</strong>：通过采样估计价值函数，解决预测问题。</li>
+</ul>
+<h3>总结</h3>
+<p>预测与控制是强化学习中的核心问题，通过解决预测问题，可以了解当前策略的价值，通过解决控制问题，可以找到最优策略，使得累积奖励最大化。这两者在实际应用中具有重要意义，并且通过动态规划、时序差分和蒙特卡洛方法等优化算法，可以有效地解决这些问题。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 06_2.3.7_预测与控制
+
+"""
+Lecture: 02_马尔可夫决策过程/2.3_马尔可夫决策过程
+Content: 06_2.3.7_预测与控制
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

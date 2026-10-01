@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.3.4 贝尔曼期望方程</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>03_2.3.4_贝尔曼期望方程</h1>
+<pre><code>Lecture: 02_马尔可夫决策过程/2.3_马尔可夫决策过程
+Content: 03_2.3.4_贝尔曼期望方程
+</code></pre>
+<h3>2.3.4 贝尔曼期望方程</h3>
+<h4>1. 贝尔曼期望方程的定义</h4>
+<p>贝尔曼期望方程（Bellman Expectation Equation）是强化学习中描述状态价值函数和动作价值函数的核心方程。它揭示了当前状态（或状态-动作对）与未来状态（或状态-动作对）之间的关系，表达了在一个策略下，状态或状态-动作对的期望值如何计算。贝尔曼期望方程可以分为两个部分：状态价值函数贝尔曼期望方程和动作价值函数贝尔曼期望方程。</p>
+<h4>2. 状态价值函数贝尔曼期望方程</h4>
+<p>状态价值函数 $ V_{\pi}(s) $ 表示在状态 $ s $ 开始并遵循策略 $ \pi $ 时期望获得的累积奖励。其贝尔曼期望方程定义为：
+$$ V_{\pi}(s) = \mathbb{E}<em t+1="">{\pi} [r</em> + \gamma V_{\pi}(s_{t+1}) | s_t = s] $$
+其中：</p>
+<ul>
+<li>$ r_{t+1} $ 是在状态 $ s $ 下采取动作后的即时奖励。</li>
+<li>$ \gamma $ 是折扣因子，介于 0 和 1 之间，用于权衡近期奖励和远期奖励。</li>
+<li>$ \mathbb{E}_{\pi} $ 表示在策略 $ \pi $ 下的期望。</li>
+</ul>
+<p>通过展开期望，可以得到：
+$$ V_{\pi}(s) = \sum_{a \in A} \pi(a | s) \sum_{s' \in S} P(s' | s, a) [R(s, a) + \gamma V_{\pi}(s')] $$</p>
+<h4>3. 动作价值函数贝尔曼期望方程</h4>
+<p>动作价值函数 $ Q_{\pi}(s, a) $ 表示在状态 $ s $ 下采取动作 $ a $ 并遵循策略 $ \pi $ 时期望获得的累积奖励。其贝尔曼期望方程定义为：
+$$ Q_{\pi}(s, a) = \mathbb{E}<em t+1="">{\pi} [r</em> + \gamma Q_{\pi}(s_{t+1}, a_{t+1}) | s_t = s, a_t = a] $$
+通过展开期望，可以得到：
+$$ Q_{\pi}(s, a) = R(s, a) + \gamma \sum_{s' \in S} P(s' | s, a) \sum_{a' \in A} \pi(a' | s') Q_{\pi}(s', a') $$</p>
+<h4>4. 价值函数之间的关系</h4>
+<p>状态价值函数和动作价值函数之间有着密切的关系，可以通过以下公式相互转换：
+$$ V_{\pi}(s) = \sum_{a \in A} \pi(a | s) Q_{\pi}(s, a) $$
+这表示在状态 $ s $ 下的价值等于在该状态下所有可能动作的价值的加权平均。</p>
+<h4>5. 贝尔曼期望方程的意义</h4>
+<p>贝尔曼期望方程在强化学习中具有重要意义，因为它提供了一种递归的方式来计算价值函数。通过反复应用贝尔曼期望方程，可以估计出在给定策略下每个状态或状态-动作对的价值。这是策略评估和策略改进的基础。</p>
+<h4>6. 贝尔曼期望方程的应用</h4>
+<p>贝尔曼期望方程广泛应用于各种强化学习算法中，包括：</p>
+<ol>
+<li><strong>策略评估</strong>：计算给定策略的价值函数。</li>
+<li><strong>策略迭代</strong>：交替进行策略评估和策略改进，直到找到最优策略。</li>
+<li><strong>价值迭代</strong>：直接通过贝尔曼最优方程迭代，求解最优价值函数。</li>
+</ol>
+<h4>7. 贝尔曼期望方程的推导</h4>
+<p>状态价值函数的贝尔曼期望方程可以通过递归方式推导出来：
+$$ V_{\pi}(s) = \mathbb{E}<em>{\pi} [G_t | s_t = s] $$
+其中， $ G_t $ 表示从时间步 $ t $ 开始的累积奖励。根据全期望公式，可以得到：
+$$ V</em>{\pi}(s) = \mathbb{E}<em t+1="">{\pi} [r</em> + \gamma G_{t+1} | s_t = s] $$
+再根据马尔可夫性质，将 $ G_{t+1} $ 展开：
+$$ V_{\pi}(s) = \mathbb{E}<em t+1="">{\pi} [r</em> + \gamma V_{\pi}(s_{t+1}) | s_t = s] $$</p>
+<p>动作价值函数的贝尔曼期望方程推导过程类似：
+$$ Q_{\pi}(s, a) = \mathbb{E}<em t+1="">{\pi} [r</em> + \gamma G_{t+1} | s_t = s, a_t = a] $$
+根据全期望公式，可以得到：
+$$ Q_{\pi}(s, a) = \mathbb{E}<em t+1="">{\pi} [r</em> + \gamma Q_{\pi}(s_{t+1}, a_{t+1}) | s_t = s, a_t = a] $$</p>
+<p>通过以上推导，我们得到了状态价值函数和动作价值函数的贝尔曼期望方程。这些方程揭示了当前状态或状态-动作对的价值与未来状态或状态-动作对的价值之间的关系，是强化学习算法的理论基础。</p>
+<h4>8. 进一步的理解和应用</h4>
+<p>贝尔曼期望方程不仅在理论上有重要地位，在实际应用中也非常关键。例如，在机器人路径规划中，机器人需要评估每个位置的价值，以选择最优路径；在金融市场中，交易者需要评估每个投资组合的价值，以做出最佳投资决策。</p>
+<p>通过反复应用贝尔曼期望方程，可以有效地估计出在复杂环境中每个状态或状态-动作对的价值，从而实现最优决策。这也正是强化学习算法在解决实际问题时所依赖的核心理论之一。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 03_2.3.4_贝尔曼期望方程
+
+"""
+Lecture: 02_马尔可夫决策过程/2.3_马尔可夫决策过程
+Content: 03_2.3.4_贝尔曼期望方程
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

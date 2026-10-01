@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.2.2 贝尔曼方程</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>01_2.2.2_贝尔曼方程</h1>
+<pre><code>Lecture: 02_马尔可夫决策过程/2.2_马尔可夫奖励过程
+Content: 01_2.2.2_贝尔曼方程
+</code></pre>
+<h3>详细分析：贝尔曼方程 (2.2.2)</h3>
+<h4>概述</h4>
+<p>贝尔曼方程（Bellman Equation）是动态规划的核心，命名于理查德·贝尔曼（Richard Bellman）。它定义了当前状态与未来状态之间的递归关系，通过计算当前状态的即时奖励和折扣后的未来状态价值来求解状态的总价值。</p>
+<h4>贝尔曼方程的数学形式</h4>
+<p>贝尔曼方程可以表示为：
+$$ V(s) = R(s) + \gamma \sum_{s'} P(s'|s) V(s') $$
+其中，$V(s)$ 是状态 $s$ 的价值函数，$R(s)$ 是在状态 $s$ 所获得的即时奖励，$\gamma$ 是折扣因子，$P(s'|s)$ 是从状态 $s$ 转移到状态 $s'$ 的概率。</p>
+<h4>推导过程</h4>
+<ol>
+<li>
+<p><strong>全期望公式</strong>：
+全期望公式（Law of Total Expectation）用于表示在当前状态下的期望回报，即：
+$$ E[V(st+1)|st] = E[E[Gt+1|st+1]|st] = E[Gt+1|st] $$</p>
+</li>
+<li>
+<p><strong>贝尔曼方程推导</strong>：
+通过考虑即时奖励和未来奖励的期望，可以推导出贝尔曼方程：
+$$ V(s) = E[Gt|st = s] $$
+$$ = E[rt+1 + \gamma rt+2 + \gamma^2 rt+3 + \cdots | st = s] $$
+$$ = E[rt+1|st = s] + \gamma E[rt+2 + \gamma rt+3 + \gamma^2 rt+4 + \cdots | st = s] $$
+$$ = R(s) + \gamma E[V(st+1)|st = s] $$
+$$ = R(s) + \gamma \sum_{s'} P(s'|s) V(s') $$</p>
+</li>
+</ol>
+<h4>贝尔曼方程的解释</h4>
+<p>贝尔曼方程说明了当前状态的价值是即时奖励与未来所有可能状态的价值的加权和（加权由状态转移概率和折扣因子决定）。这种递归关系使得我们可以通过迭代计算，逐步逼近所有状态的价值函数。</p>
+<h4>矩阵形式</h4>
+<p>在状态数量较多时，我们可以使用矩阵形式表示贝尔曼方程，方便计算：
+$$ \mathbf{V} = \mathbf{R} + \gamma \mathbf{P} \mathbf{V} $$
+其中，$\mathbf{V}$ 是所有状态的价值函数向量，$\mathbf{R}$ 是所有状态的即时奖励向量，$\mathbf{P}$ 是状态转移概率矩阵。解这个矩阵方程可以得到：
+$$ \mathbf{V} = (\mathbf{I} - \gamma \mathbf{P})^{-1} \mathbf{R} $$
+这种形式提供了一种直接求解价值函数的方法，但在实际中通常需要迭代计算。</p>
+<h4>贝尔曼最优方程</h4>
+<p>在强化学习中，贝尔曼最优方程（Bellman Optimality Equation）用于找到最优策略：
+$$ V^<em>(s) = \max_a \left[ R(s, a) + \gamma \sum_{s'} P(s'|s, a) V^</em>(s') \right] $$
+最优状态价值函数 $V^<em>(s)$ 是在状态 $s$ 采取最优动作 $a$ 所能获得的最大期望回报。类似地，最优动作价值函数 $Q^</em>(s, a)$ 可以表示为：
+$$ Q^<em>(s, a) = R(s, a) + \gamma \sum_{s'} P(s'|s, a) \max_{a'} Q^</em>(s', a') $$
+这两种方程用于价值迭代和策略迭代算法，以求解最优策略和最优价值函数。</p>
+<h4>应用</h4>
+<p>贝尔曼方程在各种领域有广泛应用，包括：</p>
+<ol>
+<li><strong>强化学习</strong>：在强化学习中，通过贝尔曼方程计算状态或动作的价值函数，指导智能体进行决策。</li>
+<li><strong>经济学与金融</strong>：用于投资决策和资产定价，通过求解价值函数优化投资策略。</li>
+<li><strong>控制与优化</strong>：在动态系统控制中，通过贝尔曼方程优化控制策略，实现系统的最佳性能。</li>
+</ol>
+<h4>总结</h4>
+<p>贝尔曼方程作为动态规划和强化学习的核心工具，通过递归定义当前状态与未来状态的价值关系，提供了一种系统的方法来求解复杂决策问题。理解和应用贝尔曼方程对于实现最优策略和价值函数具有重要意义。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 01_2.2.2_贝尔曼方程
+
+"""
+Lecture: 02_马尔可夫决策过程/2.2_马尔可夫奖励过程
+Content: 01_2.2.2_贝尔曼方程
+"""
+
+from typing import List, Dict
+import numpy as np
+
+class BellmanEquationSolver:
+    """
+    Bellman Equation Solver class for handling states, rewards, transition probabilities, and value functions.
+    
+    Attributes:
+        states (List[str]): List of state names.
+        actions (List[str]): List of action names.
+        transition_matrix (Dict[str, np.ndarray]): State transition probability matrices for each action.
+        rewards (Dict[str, Dict[str, float]]): Rewards for each state-action pair.
+        gamma (float): Discount factor.
+    """
+    
+    def __init__(self, states: List[str], actions: List[str], transition_matrix: Dict[str, np.ndarray], rewards: Dict[str, Dict[str, float]], gamma: float):
+        """
+        初始化 BellmanEquationSolver 实例。
+        
+        Args:
+            states (List[str]): 状态名称列表。
+            actions (List[str]): 动作名称列表。
+            transition_matrix (Dict[str, np.ndarray]): 各动作对应的状态转移概率矩阵。
+            rewards (Dict[str, Dict[str, float]]): 每个状态-动作对的奖励。
+            gamma (float): 折扣因子。
+        """
+        assert all(len(states) == tm.shape[0] == tm.shape[1] for tm in transition_matrix.values()), "状态和转移矩阵大小不匹配"
+        assert 0 <= gamma <= 1, "折扣因子必须在 0 到 1 之间"
+
+        self.states = states
+        self.actions = actions
+        self.state_index = {state: i for i, state in enumerate(states)}
+        self.transition_matrix = transition_matrix
+        self.rewards = rewards
+        self.gamma = gamma
+    
+    def compute_state_value_function(self, epsilon: float = 1e-6) -> Dict[str, float]:
+        """
+        使用贝尔曼方程计算状态的价值函数。
+        
+        Args:
+            epsilon (float): 收敛条件。
+        
+        Returns:
+            Dict[str, float]: 各状态的价值函数。
+        """
+        num_states = len(self.states)
+        V = np.zeros(num_states)
+        delta = float('inf')
+
+        while delta > epsilon:
+            delta = 0
+            for i, state in enumerate(self.states):
+                v = V[i]
+                V[i] = max(sum(self.transition_matrix[action][i, j] * (self.rewards[state][action] + self.gamma * V[j]) for j, next_state in enumerate(self.states)) for action in self.actions)
+                delta = max(delta, abs(v - V[i]))
+
+        return {state: V[i] for i, state in enumerate(self.states)}
+    
+    def compute_action_value_function(self) -> Dict[str, Dict[str, float]]:
+        """
+        使用贝尔曼方程计算状态-动作对的价值函数。
+        
+        Returns:
+            Dict[str, Dict[str, float]]: 各状态-动作对的价值函数。
+        """
+        num_states = len(self.states)
+        Q = {state: {action: 0 for action in self.actions} for state in self.states}
+        
+        while True:
+            delta = 0
+            for i, state in enumerate(self.states):
+                for action in self.actions:
+                    q = Q[state][action]
+                    Q[state][action] = sum(self.transition_matrix[action][i, j] * (self.rewards[state][action] + self.gamma * max(Q[next_state].values())) for j, next_state in enumerate(self.states))
+                    delta = max(delta, abs(q - Q[state][action]))
+            if delta < epsilon:
+                break
+        
+        return Q
+    
+    def print_value_function(self, value_function: Dict[str, float]) -> None:
+        """
+        打印状态价值函数。
+        
+        Args:
+            value_function (Dict[str, float]): 各状态的价值函数。
+        """
+        for state, value in value_function.items():
+            print(f"State: {state}, Value: {value:.4f}")
+
+    def print_action_value_function(self, action_value_function: Dict[str, Dict[str, float]]) -> None:
+        """
+        打印状态-动作对的价值函数。
+        
+        Args:
+            action_value_function (Dict[str, Dict[str, float]]): 各状态-动作对的价值函数。
+        """
+        for state, actions in action_value_function.items():
+            for action, value in actions.items():
+                print(f"State: {state}, Action: {action}, Value: {value:.4f}")
+
+# 测试示例
+if __name__ == "__main__":
+    states = ["A", "B", "C"]
+    actions = ["X", "Y"]
+    transition_matrix = {
+        "X": np.array([[0.7, 0.2, 0.1],
+                       [0.1, 0.8, 0.1],
+                       [0.2, 0.3, 0.5]]),
+        "Y": np.array([[0.6, 0.3, 0.1],
+                       [0.4, 0.4, 0.2],
+                       [0.3, 0.2, 0.5]])
+    }
+    rewards = {
+        "A": {"X": 5, "Y": 10},
+        "B": {"X": 2, "Y": 4},
+        "C": {"X": 1, "Y": 2}
+    }
+    gamma = 0.9
+
+    solver = BellmanEquationSolver(states, actions, transition_matrix, rewards, gamma)
+    
+    # 计算状态价值函数
+    state_value_function = solver.compute_state_value_function()
+    
+    # 打印状态价值函数
+    solver.print_value_function(state_value_function)
+    
+    # 计算状态-动作对的价值函数
+    action_value_function = solver.compute_action_value_function()
+    
+    # 打印状态-动作对的价值函数
+    solver.print_action_value_function(action_value_function)</code></pre>
+  </div>
+</body>
+</html>
+  

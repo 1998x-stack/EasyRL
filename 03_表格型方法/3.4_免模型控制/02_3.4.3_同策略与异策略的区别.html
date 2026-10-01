@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>3.4.3 同策略与异策略的区别</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>02_3.4.3_同策略与异策略的区别</h1>
+<pre><code>Lecture: 03_表格型方法/3.4_免模型控制
+Content: 02_3.4.3_同策略与异策略的区别
+</code></pre>
+<h3>3.4.3 同策略与异策略的区别</h3>
+<h4>1. 概述</h4>
+<p>在强化学习中，同策略（On-Policy）和异策略（Off-Policy）是两种不同的学习策略。它们的主要区别在于生成样本的策略与更新价值函数时所使用的策略是否相同。同策略算法使用同一个策略进行行为选择和策略更新，而异策略算法使用不同的策略进行行为选择和策略更新。</p>
+<h4>2. 同策略</h4>
+<p><strong>定义</strong>：
+同策略算法在学习过程中，使用同一个策略进行行为选择和策略更新。即，行为策略（Behavior Policy）和目标策略（Target Policy）是相同的。</p>
+<p><strong>示例</strong>：Sarsa 算法</p>
+<ul>
+<li><strong>更新公式</strong>：
+$$ Q(s_t, a_t) \leftarrow Q(s_t, a_t) + \alpha [r_{t+1} + \gamma Q(s_{t+1}, a_{t+1}) - Q(s_t, a_t)] $$
+其中，$Q(s_{t+1}, a_{t+1})$ 是在策略 $\pi$ 下选择的动作 $a_{t+1}$ 的 Q 值。</li>
+<li><strong>特点</strong>：
+<ul>
+<li><strong>探索与利用</strong>：由于行为策略和目标策略相同，同策略算法在探索和利用之间具有一致性。</li>
+<li><strong>保守性</strong>：同策略算法通常较为保守，尤其在面对高风险环境时，会选择更安全的路径。</li>
+<li><strong>逐步更新</strong>：每一步都使用实际执行的动作进行更新，保证了策略的一致性和稳定性。</li>
+</ul>
+</li>
+</ul>
+<h4>3. 异策略</h4>
+<p><strong>定义</strong>：
+异策略算法在学习过程中，使用不同的策略进行行为选择和策略更新。即，行为策略和目标策略是不同的。</p>
+<p><strong>示例</strong>：Q 学习算法</p>
+<ul>
+<li><strong>更新公式</strong>：
+$$ Q(s_t, a_t) \leftarrow Q(s_t, a_t) + \alpha [r_{t+1} + \gamma \max_{a'} Q(s_{t+1}, a') - Q(s_t, a_t)] $$
+其中，$\max_{a'} Q(s_{t+1}, a')$ 是在下一个状态 $s_{t+1}$ 中选择最优动作 $a'$ 的 Q 值。</li>
+<li><strong>特点</strong>：
+<ul>
+<li><strong>探索与利用分离</strong>：行为策略用于探索，目标策略用于利用最大化回报。</li>
+<li><strong>激进性</strong>：异策略算法更加激进，因为它可以大胆地利用行为策略进行探索，而目标策略直接优化最优动作。</li>
+<li><strong>快速收敛</strong>：通过选择最大 Q 值，异策略算法可以更快地找到最优策略，但在高噪声环境中可能不稳定。</li>
+</ul>
+</li>
+</ul>
+<h4>4. 同策略与异策略的比较</h4>
+<ol>
+<li>
+<p><strong>策略使用</strong>：</p>
+<ul>
+<li><strong>同策略</strong>：行为策略和目标策略相同，策略一致性强。</li>
+<li><strong>异策略</strong>：行为策略和目标策略不同，探索与利用分离。</li>
+</ul>
+</li>
+<li>
+<p><strong>更新公式</strong>：</p>
+<ul>
+<li><strong>同策略</strong>：基于实际执行的动作 $a_{t+1}$ 更新 Q 值。</li>
+<li><strong>异策略</strong>：基于最大化未来回报的动作 $a'$ 更新 Q 值。</li>
+</ul>
+</li>
+<li>
+<p><strong>探索与利用</strong>：</p>
+<ul>
+<li><strong>同策略</strong>：在策略评估和改进时需要兼顾探索与利用，可能导致策略较为保守。</li>
+<li><strong>异策略</strong>：分离探索与利用，可以更大胆地进行探索，目标策略直接最大化回报。</li>
+</ul>
+</li>
+<li>
+<p><strong>应用场景</strong>：</p>
+<ul>
+<li><strong>同策略</strong>：适用于需要稳定性和安全性的环境，如导航和路径规划。</li>
+<li><strong>异策略</strong>：适用于需要快速收敛和高效探索的环境，如游戏和金融交易。</li>
+</ul>
+</li>
+</ol>
+<h3>总结</h3>
+<p>同策略和异策略是强化学习中的两种重要方法，它们在策略使用、更新公式和探索与利用等方面存在显著差异。理解同策略与异策略的区别，有助于选择合适的算法来解决具体的强化学习问题。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 02_3.4.3_同策略与异策略的区别
+
+"""
+Lecture: 03_表格型方法/3.4_免模型控制
+Content: 02_3.4.3_同策略与异策略的区别
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

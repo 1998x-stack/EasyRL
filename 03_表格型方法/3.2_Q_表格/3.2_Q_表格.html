@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>3.2 Q 表格</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>3.2_Q_表格</h1>
+<pre><code>Lecture: 03_表格型方法/3.2_Q_表格
+Content: 3.2_Q_表格
+</code></pre>
+<h3>3.2 Q 表格</h3>
+<h4>1. Q 表格概述</h4>
+<p>Q 表格（Q-table）是表格型强化学习方法中的核心概念，用于存储每个状态-动作对的价值。通过学习，智能体能够填充这张表格，进而在每个状态下选择最优动作。Q 表格的方法适用于离散状态和动作空间，是理解和实现 Q 学习的基础。</p>
+<h4>2. 状态-动作价值函数</h4>
+<p>Q 学习方法基于状态-动作价值函数 $Q(s, a)$，表示在状态 $s$ 下采取动作 $a$ 所能获得的期望累积奖励。通过不断更新 $Q(s, a)$ 的值，智能体逐渐学习到在每个状态下最优的动作选择策略。</p>
+<h4>3. Q 学习算法</h4>
+<p>Q 学习是一种异策略的时序差分学习方法，通过更新 Q 表格来逼近最优策略。其基本步骤如下：</p>
+<ol>
+<li><strong>初始化</strong>：初始化 Q 表格，每个状态-动作对的 Q 值设为零或随机值。</li>
+<li><strong>选择动作</strong>：在状态 $s$ 下，根据 $\epsilon$-贪心策略选择动作 $a$：
+<ul>
+<li>以概率 $\epsilon$ 随机选择一个动作（探索）。</li>
+<li>以概率 $1-\epsilon$ 选择当前 Q 值最大的动作（利用）。</li>
+</ul>
+</li>
+<li><strong>执行动作</strong>：执行动作 $a$，观察下一个状态 $s'$ 和奖励 $r$。</li>
+<li><strong>更新 Q 值</strong>：使用以下更新公式更新 Q 表格：
+$$ Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right) $$
+其中，$\alpha$ 是学习率，$\gamma$ 是折扣因子。</li>
+<li><strong>状态转移</strong>：将状态更新为 $s'$，重复步骤 2-4 直到终止状态。</li>
+</ol>
+<h4>4. Q 表格的初始化和更新</h4>
+<ul>
+<li><strong>初始化</strong>：Q 表格的行数是所有状态的数量，列数是所有可能的动作。初始时，Q 表格中的所有值通常设为零或小的随机数。</li>
+<li><strong>更新</strong>：在每一步的交互中，根据观察到的奖励和未来状态的最大 Q 值，更新当前状态-动作对的 Q 值。这个过程利用了贝尔曼方程的思想，通过递归地估计未来回报来更新当前值。</li>
+</ul>
+<h4>5. $\epsilon$-贪心策略</h4>
+<p>在 Q 学习中，$\epsilon$-贪心策略用于平衡探索和利用：</p>
+<ul>
+<li><strong>探索（Exploration）</strong>：以小概率 $\epsilon$ 选择随机动作，以发现新的状态和奖励。</li>
+<li><strong>利用（Exploitation）</strong>：以大概率 $1-\epsilon$ 选择当前估计最优的动作，以最大化当前的回报。
+随着学习的进行，$\epsilon$ 值可以逐渐减小，以减少探索，增加利用。</li>
+</ul>
+<h4>6. Q 学习的优缺点</h4>
+<p><strong>优点</strong>：</p>
+<ul>
+<li>实现简单：算法步骤清晰，易于实现。</li>
+<li>在线学习：可以在与环境的实时交互中更新策略，适应动态变化的环境。</li>
+<li>数据利用率高：利用时序差分方法，能够高效地更新价值函数。</li>
+</ul>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li>收敛速度慢：在大规模状态空间中，收敛速度较慢。</li>
+<li>依赖离散空间：Q 表格方法仅适用于离散的状态和动作空间，在连续空间中需要进行离散化处理。</li>
+</ul>
+<h4>7. Q 表格的实际应用</h4>
+<p>Q 表格方法在许多实际应用中具有重要意义，例如：</p>
+<ul>
+<li><strong>机器人路径规划</strong>：通过 Q 学习，机器人能够在离散的网格环境中找到最优路径。</li>
+<li><strong>游戏 AI</strong>：在游戏环境中，AI 可以通过 Q 表格学习最优策略，选择最优动作。</li>
+<li><strong>资源分配</strong>：在资源分配问题中，Q 学习可以帮助决策者找到最优的资源分配策略。</li>
+</ul>
+<h3>总结</h3>
+<p>Q 表格方法是强化学习中的基本方法，通过构建状态-动作价值函数的表格，智能体能够学习和选择最优策略。尽管其适用范围有限，但在离散状态和动作空间的应用中，Q 表格方法因其简单性和高效性得到了广泛应用。理解和掌握 Q 表格方法对于深入学习和应用强化学习具有重要意义。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 3.2_Q_表格
+
+"""
+Lecture: 03_表格型方法/3.2_Q_表格
+Content: 3.2_Q_表格
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

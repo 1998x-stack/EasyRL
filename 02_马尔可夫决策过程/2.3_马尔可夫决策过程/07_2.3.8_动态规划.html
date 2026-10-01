@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.3.8 动态规划</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>07_2.3.8_动态规划</h1>
+<pre><code>Lecture: 02_马尔可夫决策过程/2.3_马尔可夫决策过程
+Content: 07_2.3.8_动态规划
+</code></pre>
+<h3>2.3.8 动态规划</h3>
+<h4>1. 动态规划概述</h4>
+<p>动态规划（Dynamic Programming, DP）是一种解决最优决策问题的方法，适用于具有最优子结构和重叠子问题特性的问题。最优子结构意味着问题可以被分解为多个子问题，这些子问题的最优解可以组合成原问题的最优解。重叠子问题意味着子问题在解决过程中会重复出现，可以通过保存子问题的解来避免重复计算。</p>
+<p>在强化学习中，动态规划被广泛应用于马尔可夫决策过程（MDP）的预测和控制问题。它利用已知的环境模型（状态转移概率和奖励函数）来迭代求解价值函数和策略。</p>
+<h4>2. 动态规划的核心思想</h4>
+<p>动态规划的核心思想是通过递归分解问题，将复杂的问题分解为简单的子问题，并通过迭代求解来获得全局最优解。其基本步骤包括：</p>
+<ol>
+<li><strong>定义状态和值函数</strong>：状态表示系统的某一时刻的特定情况，值函数表示在某一状态下遵循某一策略时的期望累积奖励。</li>
+<li><strong>递归关系式</strong>：通过贝尔曼方程描述当前状态的值与后续状态的值之间的关系。</li>
+<li><strong>迭代求解</strong>：利用递归关系式，通过反复迭代直到收敛，求解出每个状态的最优值函数。</li>
+</ol>
+<h4>3. 预测问题中的动态规划</h4>
+<p>在预测问题中，给定一个策略 $\pi$，需要计算在该策略下各个状态的值函数 $V_{\pi}(s)$。具体步骤如下：</p>
+<ol>
+<li><strong>初始化</strong>：初始化每个状态的值函数 $V(s)$ 为一个任意值（通常为零）。</li>
+<li><strong>迭代更新</strong>：通过贝尔曼期望方程反复更新值函数，直到值函数收敛。贝尔曼期望方程为：
+$$ V_{\pi}(s) = \sum_{a \in A} \pi(a|s) \sum_{s' \in S} P(s'|s,a) [R(s,a) + \gamma V_{\pi}(s')] $$</li>
+</ol>
+<p>通过动态规划方法，可以高效地解决预测问题，得到在给定策略下的状态值函数。</p>
+<h4>4. 控制问题中的动态规划</h4>
+<p>在控制问题中，目标是找到一个最优策略 $\pi^<em>$，使得每个状态的值函数 $V^</em>(s)$ 最大化。具体步骤包括：</p>
+<ol>
+<li><strong>初始化</strong>：初始化策略 $\pi$ 和每个状态的值函数 $V(s)$。</li>
+<li><strong>策略评估</strong>：通过固定策略 $\pi$，使用贝尔曼期望方程迭代更新值函数。</li>
+<li><strong>策略改进</strong>：在当前值函数的基础上，通过选择能最大化值函数的动作来改进策略。策略改进步骤为：
+$$ \pi'(s) = \arg\max_a \sum_{s' \in S} P(s'|s,a) [R(s,a) + \gamma V(s')] $$</li>
+<li><strong>迭代</strong>：反复进行策略评估和策略改进，直到策略和值函数收敛。</li>
+</ol>
+<p>动态规划中的策略迭代和价值迭代是解决控制问题的两种主要方法。策略迭代通过交替进行策略评估和策略改进来找到最优策略，而价值迭代则是通过贝尔曼最优方程直接迭代求解最优值函数。</p>
+<h4>5. 动态规划的优缺点</h4>
+<p><strong>优点</strong>：</p>
+<ul>
+<li><strong>高效性</strong>：通过保存子问题的解，动态规划避免了重复计算，提高了计算效率。</li>
+<li><strong>确定性</strong>：在已知环境模型的情况下，动态规划可以提供精确的最优解。</li>
+</ul>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li><strong>计算复杂度</strong>：在大规模状态空间中，动态规划的计算复杂度较高，需要大量的内存和计算资源。</li>
+<li><strong>环境模型依赖</strong>：动态规划需要已知的状态转移概率和奖励函数，在未知环境中无法直接应用。</li>
+</ul>
+<h4>6. 动态规划的实际应用</h4>
+<p>动态规划在多个领域有广泛应用，包括：</p>
+<ol>
+<li><strong>路径规划</strong>：机器人通过动态规划计算最优路径，从起点到达终点。</li>
+<li><strong>资源分配</strong>：在有限资源的情况下，通过动态规划优化资源分配策略，实现最大收益。</li>
+<li><strong>游戏AI</strong>：在游戏中，AI通过动态规划计算每个状态的最优动作，从而获得胜利。</li>
+</ol>
+<h4>7. 动态规划与其他方法的比较</h4>
+<p>动态规划与蒙特卡洛方法、时序差分方法在强化学习中有不同的应用场景。蒙特卡洛方法通过采样估计值函数，适用于未知环境；时序差分方法结合了动态规划和蒙特卡洛方法的优点，既能处理未知环境，又能逐步更新值函数。</p>
+<h3>总结</h3>
+<p>动态规划作为一种高效的求解最优决策问题的方法，通过递归分解和迭代求解，可以在已知环境模型的情况下，为马尔可夫决策过程提供精确的解法。在实际应用中，动态规划在路径规划、资源分配和游戏AI等领域展现了其强大的解决能力。理解和掌握动态规划的方法，对于深入学习和应用强化学习理论具有重要意义。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 07_2.3.8_动态规划
+
+"""
+Lecture: 02_马尔可夫决策过程/2.3_马尔可夫决策过程
+Content: 07_2.3.8_动态规划
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

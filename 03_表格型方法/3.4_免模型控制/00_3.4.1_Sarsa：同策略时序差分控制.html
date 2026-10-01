@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>3.4.1 Sarsa：同策略时序差分控制</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>00_3.4.1_Sarsa：同策略时序差分控制</h1>
+<pre><code>Lecture: 03_表格型方法/3.4_免模型控制
+Content: 00_3.4.1_Sarsa：同策略时序差分控制
+</code></pre>
+<h3>3.4.1 Sarsa：同策略时序差分控制</h3>
+<h4>1. 概述</h4>
+<p>Sarsa 是一种同策略（On-Policy）的时序差分（Temporal Difference, TD）控制算法，用于估计和优化状态-动作价值函数 $Q(s, a)$。与 Q 学习不同，Sarsa 在更新时依赖于当前策略产生的动作，因此策略评估和策略改进都基于同一策略。</p>
+<h4>2. Sarsa 算法原理</h4>
+<p>Sarsa 算法的更新公式为：
+$$ Q(s_t, a_t) \leftarrow Q(s_t, a_t) + \alpha [r_{t+1} + \gamma Q(s_{t+1}, a_{t+1}) - Q(s_t, a_t)] $$
+其中：</p>
+<ul>
+<li>$Q(s_t, a_t)$ 是状态 $s_t$ 下采取动作 $a_t$ 的当前价值估计。</li>
+<li>$\alpha$ 是学习率。</li>
+<li>$r_{t+1}$ 是在状态 $s_t$ 执行动作 $a_t$ 后得到的即时奖励。</li>
+<li>$\gamma$ 是折扣因子。</li>
+<li>$Q(s_{t+1}, a_{t+1})$ 是下一个状态 $s_{t+1}$ 及其相应动作 $a_{t+1}$ 的价值估计。</li>
+</ul>
+<h4>3. Sarsa 算法步骤</h4>
+<ol>
+<li><strong>初始化</strong>：初始化 Q 表格，所有状态-动作对的 Q 值设为零或随机值。</li>
+<li><strong>选择动作</strong>：在状态 $s_t$ 下，根据 $\epsilon$-贪心策略选择动作 $a_t$：
+<ul>
+<li>以概率 $\epsilon$ 随机选择一个动作（探索）。</li>
+<li>以概率 $1-\epsilon$ 选择当前 Q 值最大的动作（利用）。</li>
+</ul>
+</li>
+<li><strong>执行动作</strong>：执行动作 $a_t$，观察即时奖励 $r_{t+1}$ 和下一个状态 $s_{t+1}$。</li>
+<li><strong>选择下一个动作</strong>：在状态 $s_{t+1}$ 下，根据 $\epsilon$-贪心策略选择下一个动作 $a_{t+1}$。</li>
+<li><strong>更新 Q 值</strong>：使用 Sarsa 更新公式更新当前状态-动作对的 Q 值：
+$$ Q(s_t, a_t) \leftarrow Q(s_t, a_t) + \alpha [r_{t+1} + \gamma Q(s_{t+1}, a_{t+1}) - Q(s_t, a_t)] $$</li>
+<li><strong>状态转移</strong>：将状态更新为 $s_{t+1}$，动作更新为 $a_{t+1}$，重复步骤 2-5 直到终止状态。</li>
+</ol>
+<h4>4. Sarsa 算法的特点</h4>
+<ul>
+<li><strong>同策略</strong>：Sarsa 算法在策略评估和策略改进时使用同一策略，这使得算法更加保守，适合在有风险的环境中应用。</li>
+<li><strong>逐步更新</strong>：Sarsa 每一步都进行更新，不需要等待整个轨迹结束，适用于在线学习。</li>
+<li><strong>软更新</strong>：通过学习率 $\alpha$ 进行逐步逼近目标值，使得 Q 值逐渐逼近真实的回报。</li>
+</ul>
+<h4>5. Sarsa 的变体</h4>
+<ul>
+<li><strong>n 步 Sarsa</strong>：在执行 n 步后更新 Q 值，而不是每一步更新一次。n 步 Sarsa 的 Q 回报为：
+$$ Q_n^t = r_{t+1} + \gamma r_{t+2} + \cdots + \gamma^{n-1} r_{t+n} + \gamma^n Q(s_{t+n}, a_{t+n}) $$</li>
+<li><strong>Sarsa(λ)</strong>：引入资格迹（Eligibility Traces）参数 $\lambda$ 的 Sarsa 变体，通过结合不同步数的回报来进行更新。</li>
+</ul>
+<h4>6. Sarsa 与 Q 学习的比较</h4>
+<ul>
+<li><strong>策略类型</strong>：Sarsa 是同策略算法，而 Q 学习是异策略算法。</li>
+<li><strong>更新目标</strong>：
+<ul>
+<li>Sarsa 更新公式依赖于实际执行的动作 $a_{t+1}$ 的 Q 值。</li>
+<li>Q 学习更新公式依赖于下一个状态的最大 Q 值：
+$$ Q(s_t, a_t) \leftarrow Q(s_t, a_t) + \alpha [r_{t+1} + \gamma \max_{a} Q(s_{t+1}, a) - Q(s_t, a_t)] $$</li>
+</ul>
+</li>
+<li><strong>策略特性</strong>：Sarsa 更加保守，适用于需要安全性考虑的场景；Q 学习更为激进，能够更快地找到最优策略，但风险较大。</li>
+</ul>
+<h3>总结</h3>
+<p>Sarsa 算法作为一种同策略时序差分控制方法，通过逐步更新 Q 表格来逼近最优策略。其保守的特性使得算法在有风险的环境中表现良好。理解 Sarsa 算法的原理和特点，对于掌握强化学习中的控制算法具有重要意义。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 00_3.4.1_Sarsa：同策略时序差分控制
+
+"""
+Lecture: 03_表格型方法/3.4_免模型控制
+Content: 00_3.4.1_Sarsa：同策略时序差分控制
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

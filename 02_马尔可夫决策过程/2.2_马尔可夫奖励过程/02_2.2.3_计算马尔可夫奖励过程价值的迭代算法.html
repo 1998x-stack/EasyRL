@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.2.3 计算马尔可夫奖励过程价值的迭代算法</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>02_2.2.3_计算马尔可夫奖励过程价值的迭代算法</h1>
+<pre><code>Lecture: 02_马尔可夫决策过程/2.2_马尔可夫奖励过程
+Content: 02_2.2.3_计算马尔可夫奖励过程价值的迭代算法
+</code></pre>
+<h3>详细分析：计算马尔可夫奖励过程价值的迭代算法 (2.2.3)</h3>
+<h4>概述</h4>
+<p>计算马尔可夫奖励过程（Markov Reward Process, MRP）价值的迭代算法主要包括动态规划（Dynamic Programming, DP）、蒙特卡洛方法（Monte Carlo, MC）和时序差分学习（Temporal-Difference Learning, TD Learning）。这些方法旨在通过不断更新价值函数，逐步逼近真实的状态价值   。</p>
+<h4>动态规划方法</h4>
+<p>动态规划方法利用贝尔曼方程，通过不断迭代更新状态价值函数来求解马尔可夫奖励过程的价值。具体步骤如下：</p>
+<ol>
+<li><strong>初始化</strong>：设定所有状态的初始价值函数 $ V(s) $。</li>
+<li><strong>迭代更新</strong>：使用贝尔曼方程进行迭代更新，直到价值函数收敛。
+$$ V(s) = R(s) + \gamma \sum_{s'} P(s'|s) V(s') $$</li>
+<li><strong>收敛判定</strong>：当更新前后的价值函数差异小于预设阈值时，认为价值函数收敛，停止迭代。</li>
+</ol>
+<p>动态规划方法的优点在于其收敛速度较快，适用于状态空间较小的情况。然而，对于大规模状态空间，计算复杂度较高，存储和计算都存在瓶颈 。</p>
+<h4>蒙特卡洛方法</h4>
+<p>蒙特卡洛方法通过模拟多条轨迹，计算每条轨迹的累积回报，再取平均值来估计状态价值。具体步骤如下：</p>
+<ol>
+<li><strong>轨迹生成</strong>：从初始状态开始，按照状态转移概率生成多条轨迹。</li>
+<li><strong>累积回报</strong>：对于每条轨迹，计算从当前状态开始的累积回报。
+$$ G_t = r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \cdots $$</li>
+<li><strong>价值估计</strong>：将所有轨迹的累积回报求平均，作为状态价值的估计值。
+$$ V(s) = \frac{1}{N} \sum_{i=1}^N G_t^i $$</li>
+</ol>
+<p>蒙特卡洛方法无需状态转移矩阵的精确模型，只需通过采样进行计算，适用于复杂的动态系统。但其收敛速度较慢，尤其在高方差情况下，需要大量样本才能得到准确的价值估计 。</p>
+<h4>时序差分学习</h4>
+<p>时序差分学习结合了动态规划和蒙特卡洛方法的优点，通过更新当前状态的价值来逼近真实价值。具体步骤如下：</p>
+<ol>
+<li><strong>初始化</strong>：设定所有状态的初始价值函数 $ V(s) $。</li>
+<li><strong>轨迹生成</strong>：从初始状态开始，按照状态转移概率生成轨迹。</li>
+<li><strong>价值更新</strong>：对于每个状态，使用当前状态和下一状态的价值更新公式进行更新。
+$$ V(s_t) \leftarrow V(s_t) + \alpha [r_{t+1} + \gamma V(s_{t+1}) - V(s_t)] $$
+其中，$ \alpha $ 为学习率。</li>
+</ol>
+<p>时序差分学习能够在每一步更新价值函数，减少了对全局信息的依赖，适用于在线学习和实时更新。然而，选择合适的学习率和折扣因子对于收敛速度和稳定性有重要影响 。</p>
+<h4>应用</h4>
+<p>这些迭代算法在强化学习、动态系统控制、金融建模等领域有广泛应用：</p>
+<ol>
+<li><strong>强化学习</strong>：通过迭代算法求解状态价值和策略，指导智能体进行最优决策。</li>
+<li><strong>动态系统控制</strong>：实时更新系统状态价值，优化控制策略，实现系统的最优性能。</li>
+<li><strong>金融建模</strong>：估计资产价格变化的价值函数，辅助投资决策和风险管理。</li>
+</ol>
+<h4>总结</h4>
+<p>计算马尔可夫奖励过程价值的迭代算法提供了多种求解状态价值的方法，通过动态规划、蒙特卡洛方法和时序差分学习，可以在不同的应用场景中灵活选择适用的方法。理解这些算法的原理和应用，有助于解决复杂的动态决策问题，实现最优策略和价值函数。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 02_2.2.3_计算马尔可夫奖励过程价值的迭代算法
+
+"""
+Lecture: 02_马尔可夫决策过程/2.2_马尔可夫奖励过程
+Content: 02_2.2.3_计算马尔可夫奖励过程价值的迭代算法
+"""
+
+from typing import List, Dict, Tuple
+import numpy as np
+
+class MarkovRewardProcess:
+    """
+    Markov Reward Process (MRP) class for handling states, rewards, transition probabilities, and value functions.
+    
+    Attributes:
+        states (List[str]): List of state names.
+        transition_matrix (np.ndarray): State transition probability matrix.
+        rewards (Dict[str, float]): Rewards for each state.
+        gamma (float): Discount factor.
+    """
+    
+    def __init__(self, states: List[str], transition_matrix: np.ndarray, rewards: Dict[str, float], gamma: float):
+        """
+        初始化 MarkovRewardProcess 实例。
+        
+        Args:
+            states (List[str]): 状态名称列表。
+            transition_matrix (np.ndarray): 状态转移概率矩阵。
+            rewards (Dict[str, float]): 每个状态的奖励。
+            gamma (float): 折扣因子。
+        """
+        assert len(states) == transition_matrix.shape[0] == transition_matrix.shape[1], "状态和转移矩阵大小不匹配"
+        assert 0 <= gamma <= 1, "折扣因子必须在 0 到 1 之间"
+
+        self.states = states
+        self.state_index = {state: i for i, state in enumerate(states)}
+        self.transition_matrix = transition_matrix
+        self.rewards = rewards
+        self.gamma = gamma
+
+    def dynamic_programming(self, epsilon: float = 1e-6) -> Dict[str, float]:
+        """
+        使用动态规划方法计算状态的价值函数。
+        
+        Args:
+            epsilon (float): 收敛条件。
+        
+        Returns:
+            Dict[str, float]: 各状态的价值函数。
+        """
+        num_states = len(self.states)
+        V = np.zeros(num_states)
+        delta = float('inf')
+
+        while delta > epsilon:
+            delta = 0
+            for i, state in enumerate(self.states):
+                v = V[i]
+                V[i] = self.rewards[state] + self.gamma * np.sum(self.transition_matrix[i, :] * V)
+                delta = max(delta, abs(v - V[i]))
+
+        return {state: V[i] for i, state in enumerate(self.states)}
+    
+    def monte_carlo(self, episodes: int = 1000) -> Dict[str, float]:
+        """
+        使用蒙特卡洛方法计算状态的价值函数。
+        
+        Args:
+            episodes (int): 模拟的轨迹数量。
+        
+        Returns:
+            Dict[str, float]: 各状态的价值函数。
+        """
+        returns = {state: [] for state in self.states}
+        V = {state: 0 for state in self.states}
+
+        for _ in range(episodes):
+            state = np.random.choice(self.states)
+            episode = []
+            while state in self.rewards:
+                next_state = np.random.choice(self.states, p=self.transition_matrix[self.state_index[state]])
+                reward = self.rewards[state]
+                episode.append((state, reward))
+                state = next_state
+
+            G = 0
+            for state, reward in reversed(episode):
+                G = reward + self.gamma * G
+                returns[state].append(G)
+
+        for state in self.states:
+            if returns[state]:
+                V[state] = np.mean(returns[state])
+
+        return V
+
+    def temporal_difference(self, alpha: float = 0.1, episodes: int = 1000) -> Dict[str, float]:
+        """
+        使用时序差分方法计算状态的价值函数。
+        
+        Args:
+            alpha (float): 学习率。
+            episodes (int): 模拟的轨迹数量。
+        
+        Returns:
+            Dict[str, float]: 各状态的价值函数。
+        """
+        V = {state: 0 for state in self.states}
+
+        for _ in range(episodes):
+            state = np.random.choice(self.states)
+            while state in self.rewards:
+                next_state = np.random.choice(self.states, p=self.transition_matrix[self.state_index[state]])
+                reward = self.rewards[state]
+                V[state] += alpha * (reward + self.gamma * V[next_state] - V[state])
+                state = next_state
+
+        return V
+    
+    def print_value_function(self, value_function: Dict[str, float]) -> None:
+        """
+        打印状态价值函数。
+        
+        Args:
+            value_function (Dict[str, float]): 各状态的价值函数。
+        """
+        for state, value in value_function.items():
+            print(f"State: {state}, Value: {value:.4f}")
+
+# 测试示例
+if __name__ == "__main__":
+    states = ["A", "B", "C"]
+    transition_matrix = np.array([[0.5, 0.3, 0.2],
+                                  [0.2, 0.6, 0.2],
+                                  [0.1, 0.1, 0.8]])
+    rewards = {"A": 1.0, "B": 0.5, "C": 0.0}
+    gamma = 0.9
+
+    mrp = MarkovRewardProcess(states, transition_matrix, rewards, gamma)
+    
+    # 动态规划方法计算状态价值函数
+    dp_value_function = mrp.dynamic_programming()
+    print("Dynamic Programming Value Function:")
+    mrp.print_value_function(dp_value_function)
+    
+    # 蒙特卡洛方法计算状态价值函数
+    mc_value_function = mrp.monte_carlo()
+    print("\nMonte Carlo Value Function:")
+    mrp.print_value_function(mc_value_function)
+    
+    # 时序差分方法计算状态价值函数
+    td_value_function = mrp.temporal_difference()
+    print("\nTemporal Difference Value Function:")
+    mrp.print_value_function(td_value_function)
+</code></pre>
+  </div>
+</body>
+</html>
+  

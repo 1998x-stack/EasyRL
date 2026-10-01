@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>3.3.3 动态规划方法、蒙特卡洛方法以及时序差分方法的自举和采样</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>02_3.3.3_动态规划方法、蒙特卡洛方法以及时序差分方法的自举和采样</h1>
+<pre><code>Lecture: 03_表格型方法/3.3_免模型预测
+Content: 02_3.3.3_动态规划方法、蒙特卡洛方法以及时序差分方法的自举和采样
+</code></pre>
+<h3>3.3.3 动态规划方法、蒙特卡洛方法以及时序差分方法的自举和采样</h3>
+<h4>1. 概述</h4>
+<p>在强化学习中，动态规划、蒙特卡洛方法和时序差分方法是三种主要的策略评估和策略改进方法。它们在处理价值估计时使用了不同的自举（Bootstrapping）和采样（Sampling）技术。这些技术在更新状态价值时有着不同的特点和应用场景。</p>
+<h4>2. 自举和采样的定义</h4>
+<ul>
+<li><strong>自举（Bootstrapping）</strong>：自举是指在更新时使用估计的值来替代真实的值。换句话说，自举方法在计算一个状态的价值时，利用的是其他状态的当前估计值，而不是实际的经验回报。</li>
+<li><strong>采样（Sampling）</strong>：采样是指通过从环境中获取实际的经验数据（如奖励和下一个状态）来进行更新。采样方法利用这些实际数据来计算状态的价值。</li>
+</ul>
+<h4>3. 动态规划方法</h4>
+<p>**动态规划（Dynamic Programming, DP）**方法是有模型的策略评估和策略改进方法，利用已知的环境模型（状态转移概率和奖励函数）来进行自举更新。</p>
+<ul>
+<li><strong>贝尔曼期望方程</strong>：动态规划通过贝尔曼期望方程进行状态价值更新：
+$$ V(s) \leftarrow \sum_{a \in A} \pi(a|s) \sum_{s' \in S} P(s'|s,a) [R(s,a) + \gamma V(s')] $$</li>
+<li><strong>自举</strong>：在更新状态 $s$ 的价值时，动态规划使用了下一个状态 $s'$ 的价值估计值 $V(s')$，即通过自举进行更新。</li>
+</ul>
+<h4>4. 蒙特卡洛方法</h4>
+<p>**蒙特卡洛方法（Monte Carlo Methods, MC）**是一种基于采样的策略评估方法，通过生成多个完整的轨迹，并计算轨迹的平均回报来进行价值估计。</p>
+<ul>
+<li><strong>轨迹回报</strong>：蒙特卡洛方法通过采样多个完整的状态-动作-奖励序列（轨迹），计算每个轨迹的累积回报 $G_t$，并将其作为状态价值的估计。
+$$ V(s) \leftarrow \frac{1}{N(s)} \sum_{i=1}^{N(s)} G_t $$</li>
+<li><strong>纯采样</strong>：蒙特卡洛方法仅依赖实际采样到的回报进行更新，不使用估计值，因此没有自举。</li>
+</ul>
+<h4>5. 时序差分方法</h4>
+<p>**时序差分方法（Temporal Difference, TD）**结合了动态规划的自举思想和蒙特卡洛方法的采样思想，在每一步更新时利用即时奖励和下一个状态的价值估计值。</p>
+<ul>
+<li><strong>时序差分目标</strong>：时序差分方法利用即时奖励和下一个状态的价值估计值进行更新：
+$$ V(s_t) \leftarrow V(s_t) + \alpha \left( r_{t+1} + \gamma V(s_{t+1}) - V(s_t) \right) $$</li>
+<li><strong>自举与采样结合</strong>：时序差分方法既利用了实际采样到的即时奖励 $r_{t+1}$，也使用了下一个状态的价值估计值 $V(s_{t+1})$ 进行自举更新。</li>
+</ul>
+<h4>6. 三种方法的比较</h4>
+<ol>
+<li>
+<p><strong>更新频率</strong>：</p>
+<ul>
+<li><strong>动态规划</strong>：每次迭代需要更新所有状态的价值，适用于已知环境模型的情况。</li>
+<li><strong>蒙特卡洛方法</strong>：每个轨迹结束后更新状态价值，适用于无终止状态的情况。</li>
+<li><strong>时序差分方法</strong>：每一步进行更新，适用于在线学习和无终止状态的情况。</li>
+</ul>
+</li>
+<li>
+<p><strong>自举与采样</strong>：</p>
+<ul>
+<li><strong>动态规划</strong>：完全依赖自举，通过已知模型进行更新。</li>
+<li><strong>蒙特卡洛方法</strong>：完全依赖采样，通过实际轨迹数据进行更新。</li>
+<li><strong>时序差分方法</strong>：结合自举和采样，既利用即时奖励的实际数据，也使用价值估计进行更新。</li>
+</ul>
+</li>
+<li>
+<p><strong>收敛速度</strong>：</p>
+<ul>
+<li><strong>动态规划</strong>：收敛速度快，但计算复杂度高，适用于小规模问题。</li>
+<li><strong>蒙特卡洛方法</strong>：收敛速度慢，需要大量样本，适用于大规模问题。</li>
+<li><strong>时序差分方法</strong>：收敛速度介于动态规划和蒙特卡洛方法之间，适用于在线学习和大规模问题。</li>
+</ul>
+</li>
+</ol>
+<h3>总结</h3>
+<p>动态规划、蒙特卡洛方法和时序差分方法在强化学习中各有优缺点和适用场景。动态规划适用于已知环境模型的情况，通过自举进行更新；蒙特卡洛方法适用于无终止状态的情况，通过纯采样进行更新；时序差分方法结合了两者的优点，适用于在线学习和大规模问题。理解这三种方法的自举和采样机制，有助于选择合适的强化学习算法来解决具体问题。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 02_3.3.3_动态规划方法、蒙特卡洛方法以及时序差分方法的自举和采样
+
+"""
+Lecture: 03_表格型方法/3.3_免模型预测
+Content: 02_3.3.3_动态规划方法、蒙特卡洛方法以及时序差分方法的自举和采样
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.3.13 策略迭代与价值迭代的区别</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>12_2.3.13_策略迭代与价值迭代的区别</h1>
+<pre><code>Lecture: 02_马尔可夫决策过程/2.3_马尔可夫决策过程
+Content: 12_2.3.13_策略迭代与价值迭代的区别
+</code></pre>
+<h3>2.3.13 策略迭代与价值迭代的区别</h3>
+<h4>1. 概述</h4>
+<p>策略迭代（Policy Iteration）和价值迭代（Value Iteration）是求解马尔可夫决策过程（MDP）控制问题的两种主要方法。虽然两者都旨在找到最优策略，但它们在实现方式和计算过程上有所不同。</p>
+<h4>2. 策略迭代</h4>
+<p><strong>策略迭代</strong>是一种迭代算法，它通过反复进行策略评估和策略改进两个步骤，最终收敛到最优策略和最优价值函数。其主要步骤如下：</p>
+<ol>
+<li>
+<p><strong>策略评估</strong>：给定当前策略 $\pi$，通过贝尔曼期望方程迭代计算价值函数 $V_{\pi}$，直到收敛。
+$$ V_{\pi}(s) = \sum_{a \in A} \pi(a|s) \sum_{s' \in S} P(s'|s,a) [R(s,a) + \gamma V_{\pi}(s')] $$</p>
+</li>
+<li>
+<p><strong>策略改进</strong>：利用当前的价值函数 $V_{\pi}$，更新策略 $\pi$，使得在每个状态 $s$ 选择的动作 $a$ 使得 $Q_{\pi}(s, a)$ 最大。
+$$ \pi'(s) = \arg\max_{a} \sum_{s' \in S} P(s'|s, a) [R(s,a) + \gamma V_{\pi}(s')] $$</p>
+</li>
+</ol>
+<p>策略迭代通过反复进行上述两个步骤，直到策略不再发生变化，即达到收敛。</p>
+<h4>3. 价值迭代</h4>
+<p><strong>价值迭代</strong>直接通过贝尔曼最优方程迭代计算最优价值函数 $V^*$，过程如下：</p>
+<ol>
+<li><strong>初始化</strong>：令 $k = 1$，对于所有状态 $s$，设初始值 $V_0(s) = 0$。</li>
+<li><strong>迭代更新</strong>：通过贝尔曼最优方程反复更新价值函数，直到价值函数收敛。
+$$ V_{k+1}(s) = \max_{a \in A} \sum_{s' \in S} P(s'|s,a) [R(s,a) + \gamma V_k(s')] $$</li>
+</ol>
+<p>价值函数收敛后，通过贪婪策略从价值函数中提取最优策略：
+$$ \pi^<em>(s) = \arg\max_{a} \sum_{s' \in S} P(s'|s, a) [R(s,a) + \gamma V^</em>(s')] $$</p>
+<p>价值迭代通过反复应用贝尔曼最优方程，不断逼近最优价值函数，从中提取最优策略。</p>
+<h4>4. 策略迭代与价值迭代的比较</h4>
+<p><strong>实现步骤</strong>：</p>
+<ul>
+<li><strong>策略迭代</strong>：每次迭代包括两个步骤：策略评估和策略改进。策略评估通过贝尔曼期望方程迭代计算当前策略的价值函数，策略改进通过贪婪策略选择最优动作来更新策略。</li>
+<li><strong>价值迭代</strong>：每次迭代直接通过贝尔曼最优方程更新价值函数，不需要显式的策略评估和策略改进步骤。</li>
+</ul>
+<p><strong>收敛速度</strong>：</p>
+<ul>
+<li><strong>策略迭代</strong>：由于每次策略改进后策略单调变优，通常收敛较快。但每次策略评估可能需要多次迭代，计算量较大。</li>
+<li><strong>价值迭代</strong>：每次迭代更新所有状态的价值，计算量较小。但每次迭代后的策略改进可能不明显，收敛速度较慢。</li>
+</ul>
+<p><strong>计算复杂度</strong>：</p>
+<ul>
+<li><strong>策略迭代</strong>：每次策略评估需要多次迭代，计算复杂度较高。</li>
+<li><strong>价值迭代</strong>：每次迭代计算量较小，但迭代次数较多。</li>
+</ul>
+<p><strong>算法稳定性</strong>：</p>
+<ul>
+<li><strong>策略迭代</strong>：每次迭代结果都是一个完整的策略，过程稳定。</li>
+<li><strong>价值迭代</strong>：迭代过程中间结果不具有策略意义，仅在最终收敛时提取最优策略。</li>
+</ul>
+<h4>5. 实际应用中的选择</h4>
+<p>在实际应用中，选择策略迭代还是价值迭代需要根据具体问题的特点和计算资源进行权衡。</p>
+<ul>
+<li><strong>策略迭代</strong>适用于策略评估步骤计算量不大的问题，因其收敛速度快，结果稳定。</li>
+<li><strong>价值迭代</strong>适用于状态空间较大，但每次迭代计算量小的问题，因其实现简单，计算量小。</li>
+</ul>
+<h4>6. 例子对比</h4>
+<p><strong>策略迭代</strong>：</p>
+<p>在一个简单的网格世界中，使用策略迭代方法，可以通过反复进行策略评估和策略改进，计算出每个状态的最优价值函数和最优策略。</p>
+<p><strong>价值迭代</strong>：</p>
+<p>同样的网格世界中，使用价值迭代方法，通过反复应用贝尔曼最优方程，逐渐逼近最优价值函数，并从中提取最优策略。</p>
+<h3>总结</h3>
+<p>策略迭代和价值迭代是解决马尔可夫决策过程控制问题的两种主要方法。虽然两者都旨在找到最优策略，但在实现步骤、收敛速度、计算复杂度和算法稳定性等方面存在差异。理解这两种方法的优缺点及其适用场景，有助于在实际应用中选择合适的算法。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 12_2.3.13_策略迭代与价值迭代的区别
+
+"""
+Lecture: 02_马尔可夫决策过程/2.3_马尔可夫决策过程
+Content: 12_2.3.13_策略迭代与价值迭代的区别
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  

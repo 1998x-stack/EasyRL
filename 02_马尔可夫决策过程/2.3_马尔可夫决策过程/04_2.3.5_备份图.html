@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <title>2.3.5 备份图</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap">
+  <link rel="stylesheet" href="../../markdown.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="../../markdown.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>04_2.3.5_备份图</h1>
+<pre><code>Lecture: 02_马尔可夫决策过程/2.3_马尔可夫决策过程
+Content: 04_2.3.5_备份图
+</code></pre>
+<h3>2.3.5 备份图</h3>
+<h4>1. 备份图概述</h4>
+<p>在强化学习中，备份（backup）是一个重要的概念，用于描述某一状态的当前价值与其未来价值之间的关系。备份图（backup diagram）或回溯图（return diagram）展示了如何将价值信息从一个状态（或状态-动作对）的后继状态（或状态-动作对）转移回它。这些图形是强化学习方法的核心，构成了更新或备份操作的基础。</p>
+<h4>2. 备份图的组成</h4>
+<p>备份图主要由以下元素组成：</p>
+<ul>
+<li><strong>空心圆圈</strong>：表示一个状态。</li>
+<li><strong>实心圆圈</strong>：表示一个状态-动作对。</li>
+<li><strong>箭头</strong>：表示状态或状态-动作对之间的转移关系。</li>
+</ul>
+<p>在备份图中，每一个空心圆圈表示一个状态，每一个实心圆圈表示一个状态-动作对。通过这些图形，我们可以直观地看到价值信息如何在状态之间传递。</p>
+<h4>3. 状态价值函数的备份图</h4>
+<p>对于状态价值函数 $ V_{\pi}(s) $，其备份图描述了当前状态的价值如何通过未来状态的价值进行更新。状态价值函数的贝尔曼期望方程为：
+$$ V_{\pi}(s) = \sum_{a \in A} \pi(a|s) \sum_{s' \in S} P(s'|s,a) [R(s,a) + \gamma V_{\pi}(s')] $$
+在备份图中，可以看到两个层次的加和：</p>
+<ol>
+<li><strong>第一层加和</strong>：对叶子节点进行加和，将未来的价值（$ s' $ 的价值）备份到黑色的节点（状态-动作对）。</li>
+<li><strong>第二层加和</strong>：对动作进行加和，得到黑色节点的价值后，再往上备份一层，得到根节点的价值（当前状态的价值）。</li>
+</ol>
+<h4>4. 动作价值函数的备份图</h4>
+<p>对于动作价值函数 $ Q_{\pi}(s, a) $，其备份图描述了当前状态-动作对的价值如何通过未来状态-动作对的价值进行更新。动作价值函数的贝尔曼期望方程为：
+$$ Q_{\pi}(s, a) = R(s, a) + \gamma \sum_{s' \in S} P(s'|s, a) \sum_{a' \in A} \pi(a'|s') Q_{\pi}(s', a') $$
+在备份图中，同样可以看到两个层次的加和：</p>
+<ol>
+<li><strong>第一层加和</strong>：对叶子节点进行加和，将未来的价值（$ s' $ 的价值）备份到空心圆圈节点（状态）。</li>
+<li><strong>第二层加和</strong>：对动作进行加和，将空心圆圈节点的价值备份到当前时刻的黑色节点（状态-动作对）。</li>
+</ol>
+<h4>5. 备份图的实际意义</h4>
+<p>备份图在强化学习中具有重要的实际意义，因为它们提供了一种直观的方法来理解和实现价值函数的更新过程。通过备份图，可以更清晰地看到价值信息如何在状态和状态-动作对之间传递，从而帮助我们设计更有效的强化学习算法。</p>
+<h4>6. 备份图的具体应用</h4>
+<p>备份图在实际中的应用非常广泛，例如：</p>
+<ol>
+<li><strong>路径规划</strong>：在路径规划问题中，机器人需要通过状态转移和动作选择来找到最优路径。备份图可以帮助机器人更新每个状态的价值，从而找到最优路径。</li>
+<li><strong>游戏AI</strong>：在游戏中，AI需要评估每个状态-动作对的价值，以选择最优动作。备份图可以帮助AI更新每个状态-动作对的价值，从而实现最优决策。</li>
+<li><strong>资源分配</strong>：在资源分配问题中，备份图可以帮助我们更新每个状态的价值，从而找到最优的资源分配策略。</li>
+</ol>
+<h4>7. 备份图的优势和挑战</h4>
+<p><strong>优势</strong>：</p>
+<ul>
+<li><strong>直观性</strong>：备份图提供了一种直观的方法来理解价值函数的更新过程。</li>
+<li><strong>灵活性</strong>：备份图可以应用于各种强化学习算法，包括动态规划、蒙特卡洛方法和时序差分方法。</li>
+</ul>
+<p><strong>挑战</strong>：</p>
+<ul>
+<li><strong>计算复杂度</strong>：在实际问题中，状态空间和动作空间可能非常庞大，导致备份图的计算复杂度较高。需要采用函数逼近和分层强化学习等方法来应对这一问题。</li>
+<li><strong>收敛性</strong>：在某些情况下，备份图的迭代更新过程可能会收敛缓慢。需要通过适当的参数调节和优化算法来加快收敛速度。</li>
+</ul>
+<h4>8. 深入理解和总结</h4>
+<p>备份图是强化学习中一个重要的工具，它们揭示了当前状态或状态-动作对的价值与未来状态或状态-动作对的价值之间的关系。通过备份图，我们可以更直观地理解和实现价值函数的更新过程，从而设计更有效的强化学习算法。理解备份图的概念和应用，对于深入掌握强化学习理论和解决实际问题具有重要意义 。</p>
+
+    <h3>Python 文件</h3>
+    <pre><code># 04_2.3.5_备份图
+
+"""
+Lecture: 02_马尔可夫决策过程/2.3_马尔可夫决策过程
+Content: 04_2.3.5_备份图
+"""
+
+</code></pre>
+  </div>
+</body>
+</html>
+  
